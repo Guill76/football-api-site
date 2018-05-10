@@ -21,7 +21,7 @@ import { NotificationService } from './notification.service';
 import { SoccerPitchService } from './soccer-pitch.service';
 import { FootDbApiService } from './foot-db-api.service';
 import { LiveService } from './live.service';
-import { WebsocketService } from './websocket.service'
+import { WebsocketService } from './websocket.service';
 
 import { FirstToUpperPipe } from './first-to-upper.pipe';
 import { FootballTeamsComponent } from './football-page/football-teams/football-teams.component';
@@ -42,7 +42,7 @@ const appRoutes: Routes = [
       path: 'results/:id',
       component: FootResultsComponent,
       outlet: 'resultOut',
-      children:[{
+      children: [{
         path: 'compo/:id/:awayTeamId/:homeTeamId',
         component: SoccerPitchComponent,
         outlet: 'CompoOutlet',
@@ -63,7 +63,7 @@ const appRoutes: Routes = [
     path: 'logout',
     component: LogoutComponent
   },
-  { path: '',  
+  { path: '',
     redirectTo: 'login',
     pathMatch: 'full'
   }
@@ -93,7 +93,8 @@ const appRoutes: Routes = [
     HttpModule
   ],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
-  providers: [ConfigService,UsersService, TimerService, NotificationService, FootDbApiService, LiveService, SoccerPitchService, WebsocketService ],
+  providers: [ConfigService, UsersService, TimerService, NotificationService,
+    FootDbApiService, LiveService, SoccerPitchService, WebsocketService ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

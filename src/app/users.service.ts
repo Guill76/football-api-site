@@ -3,7 +3,7 @@ import {throwError as observableThrowError,  Observable ,  Subject } from 'rxjs'
 import { Injectable } from '@angular/core';
 import { Http, Response ,Headers} from '@angular/http';
 import { ConfigService} from './config.service';
-import { NotificationService } from './notification.service'
+import { NotificationService } from './notification.service';
 import { WebsocketService } from './websocket.service';
 
 
@@ -100,7 +100,8 @@ export class UsersService {
             });
           }
         }
-      });
+      },
+      err => console.log('WS errors', err));
     }
   }
   

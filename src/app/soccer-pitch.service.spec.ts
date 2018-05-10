@@ -1,11 +1,14 @@
 import { TestBed, inject } from '@angular/core/testing';
+import { HttpModule } from '@angular/http';
+import { ConfigService } from './config.service';
 
 import { SoccerPitchService } from './soccer-pitch.service';
 
 describe('SoccerPitchService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [SoccerPitchService]
+      imports: [HttpModule],
+      providers: [SoccerPitchService, ConfigService]
     });
   });
 

@@ -1,0 +1,28 @@
+.menu{
+    width:360px;
+    background-color: #0f290d;
+    margin-top:-5px;
+    padding-top:10px;
+    padding-bottom:5px; 
+    color: #fff;
+    font-size: 1rem;
+}
+a{
+    margin-left: 5px;
+    color: #fff;
+    font-size: 1.3em;
+}
+.menu a{
+    padding-right:5px;
+    padding-left:5px;
+}
+a:hover{
+    color : #ff0000;
+}
+.right{
+    text-align: right;
+}
+.red{
+    color: #ff0000;
+    padding-right:10px;
+}

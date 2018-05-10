@@ -1,0 +1,225 @@
+<div *ngIf='!closedPitch'>
+  <div>
+    <canvas #pitch></canvas>
+    <div *ngIf='!closedPitch' class="menu">
+      <a (click)="newP()"><i class="fa fa-plus" aria-hidden="true"  title="Nouveau"></i></a>
+      <a  (click)="showForm()" title="Modifier les Parametres"><i class="fa fa-gears"></i></a>
+      <a *ngIf="mode==='Edition'" (click)="toggleEdition()" title="Ajouter un joueur" ><i class="fa fa-user-plus"></i></a>
+      <a *ngIf="mode==='Ajout'" (click)="toggleEdition()" title="Editer un joueur"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+      <a (click)="raz()"><i class="fa fa-undo" aria-hidden="true"  title="RaZ Compo"></i></a>
+      <a (click)="previous()"><i class="fa fa-arrow-left" aria-hidden="true"  title="compo precedente"></i></a>
+      <a (click)="next()"><i class="fa fa-arrow-right" aria-hidden="true"  title="compo suivante"></i></a>
+      
+      <!-- &nbsp;<input type="submit" class="button secondary small"  value="Enregistrer" (click)="saveProperties()"> -->
+    </div> 
+    <div class="menu">
+      <div class="row">
+          <div class="small-2 medium-2 large-2 columns text-right">Name</div>
+          <div class="small-3 medium-3 large-3 columns text-left">
+            <input  type='text' [(ngModel)]='properties.sheetName' name='sheetName'>
+          </div>
+          <div class="small-5 medium-5 large-5 columns text-right">
+            <a (click)="saveProperties()"><i class="fa fa-floppy-o" aria-hidden="true"  title="Enregistrer la compo"></i></a>
+            <a (click)="deleteProperties()"><i class="fa fa-trash-o" aria-hidden="true"  title="supprimer la compo"></i></a>
+            <span class="right red"> &nbsp;Mode <i *ngIf="mode==='Edition'" class="fa fa-pencil"></i><i *ngIf="mode==='Ajout'" class="fa fa-user-plus"></i></span>
+          </div>
+          <div class="small-2 medium-2 large-2 columns text-left">
+              <span class="right"><a (click)="closePitch()"><i class="fa fa-window-close " aria-hidden="true"></i></a></span>
+          </div>
+          
+      </div> 
+    </div> 
+  </div>
+<!-- Menu de config -->
+  <div class="containerCompo" *ngIf="isConfigMenuActive">
+    <form [formGroup]="reactiveMenuForm" >
+        <div class="row listingHeader">
+          <div class="small-12 columns boxHeader">
+            {{formTitle}} <span class="right clickable glyphicon glyphicon-remove" (click)="closeForm()"></span>
+          </div>
+        </div>
+        <div class="row listing">
+          <div class="small-3 medium-3 large-3 columns databox">
+            Type de terrain
+          </div>
+          <div class="small-9 medium-9 large-9 columns databox">
+            <select formControlName="type" class="small">
+              <option value=1 [selected]="properties.type===1">normal</option>
+              <option value=0 [selected]="properties.type===0">demi-terrain</option>    
+            </select>
+          </div>
+        </div>  
+        <div class="row listing">
+          <div class="small-3 medium-3 large-3 columns databox">
+            Taille des joueurs
+          </div>
+          <div class="small-9 medium-9 large-9 columns databox fbold">
+            <input formControlName="playerSize" type="range" step='1' min='8' max='40'>&nbsp;{{reactiveMenuForm.value.playerSize}}
+          </div>
+        </div> 
+        <div class="row listing">
+          <div class="small-3 medium-3 large-3 columns databox">
+            Nombre d'équipes
+          </div>
+          <div class="small-9 medium-9 large-9 columns databox">
+            <select formControlName="teamsNumber" class="small">
+              <option value=1 [selected]="properties.teams.length===1">1</option>
+              <option value=2 [selected]="properties.teams.length===2">2</option>    
+            </select>
+          </div>
+        </div> 
+        
+        <div class="row listingGroupHeader">
+          <div class="small-2 medium-2 large-2 columns boxHeader">
+           &nbsp; 
+          </div>
+          <div class="small-5 medium-5 large-5 columns boxHeader fbold">
+            Equipe {{(reactiveMenuForm.value.team1Direction==0)?' bas':' haut'}}
+          </div>
+          <div class="small-5 medium-5 large-5 columns boxHeader fbold">
+            Equipe {{(reactiveMenuForm.value.team2Direction==0)?' bas':' haut'}}
+          </div>
+        </div>
+        <div class="row listing">
+          <div class="small-2 medium-2 large-2 columns databox">
+            Couleur Maillot
+          </div>
+          <div class="small-5 medium-5 large-5 columns databox">
+            <input type="color" formControlName="team1Color1">
+          </div>
+          <div class="small-5 medium-5 large-5 columns databox">
+            <input type="color" formControlName="team2Color1">
+          </div>
+        </div>
+        <div class="row listing">
+          <div class="small-2 medium-2 large-2 columns databox">
+            Couleur Rayures
+          </div>
+          <div class="small-5 medium-5 large-5 columns databox">
+            <input type="color" formControlName="team1Color2">
+          </div>
+          <div class="small-5 medium-5 large-5 columns databox">
+            <input type="color" formControlName="team2Color2">
+          </div>
+        </div>
+        <div class="row listing">
+          <div class="small-2 medium-2 large-2 columns databox">
+            Nombres de rayures
+          </div>
+          <div class="small-5 medium-5 large-5 columns databox fbold">
+            <input formControlName="numberOfStripes1" type="range" step='1' min='1' max='8'>&nbsp;{{reactiveMenuForm.value.numberOfStripes1}}
+          </div>
+          <div class="small-5 medium-5 large-5 columns databox fbold">
+            <input formControlName="numberOfStripes2" type="range" step='1' min='1' max='8'>&nbsp;{{reactiveMenuForm.value.numberOfStripes2}}
+          </div>
+        </div>  
+        <div class="row listing">
+          <div class="small-2 medium-2 large-2 columns databox">
+            Type Rayures
+          </div>
+          <div class="small-5 medium-5 large-5 columns databox">
+            <select formControlName="stripesTypeTeam1" class="small">
+              <option value=0 [selected]="properties.teams[0].stripesType===0">Verticales</option>
+              <option value=1 [selected]="properties.teams[0].stripesType===1">Horizontales</option> 
+              <option value=2 [selected]="properties.teams[0].stripesType===2">Obliques(45/)</option>
+              <option value=3 [selected]="properties.teams[0].stripesType===3">Obliques(135\)</option>    
+            </select>
+          </div>
+          <div class="small-5 medium-5 large-5 columns databox">
+            <select formControlName="stripesTypeTeam2" class="small">
+              <option value=0 [selected]="properties.teams[1].stripesType===0">Verticales</option>
+              <option value=1 [selected]="properties.teams[1].stripesType===1">Horizontales</option> 
+              <option value=2 [selected]="properties.teams[1].stripesType===2">Obliques(45/)</option>
+              <option value=3 [selected]="properties.teams[1].stripesType===3">Obliques(135\)</option>    
+            </select>
+          </div>
+        </div> 
+        <div class="row listing">
+          <div class="small-2 medium-2 large-2 columns databox">
+            Couleur Texte
+          </div>
+          <div class="small-5 medium-5 large-5 columns databox">
+            <input type="color" formControlName="team1TextColor">
+          </div>
+          <div class="small-5 medium-5 large-5 columns databox">
+            <input type="color" formControlName="team2TextColor">
+          </div>
+        </div>
+        <div class="row listing">
+          <div class="small-2 medium-2 large-2 columns databox">
+            Direction
+          </div>
+          <div class="small-5 medium-5 large-5 columns databox">
+            <input type="radio" value="0" formControlName="team1Direction" > Haut
+            <input type="radio" value="1" formControlName="team1Direction" > Bas
+          </div>
+          <div class="small-5 medium-5 large-5 columns databox">
+            <input type="radio" value="0" formControlName="team2Direction" > Haut
+            <input type="radio" value="1" formControlName="team2Direction" > Bas
+          </div>
+        </div>   
+        
+        <div class="row listingFooter">
+          <div class="small-12 columns boxFooter">
+          <input type="submit" class="button secondary small" value="Valider" [disabled]="!reactiveMenuForm.valid" (click)="onValidateConfig()">
+          </div>
+        </div>
+    </form>
+  </div>
+
+<div class="containerCompo" *ngIf="showPlayerForm">
+    <form [formGroup]="reactivePlayerForm" >
+        <div class="row listingHeader">
+          <div class="small-12 columns boxHeader">
+            Edition d'un joueur <span class="right clickable glyphicon glyphicon-remove" (click)="closePlayerForm()"></span>
+          </div>
+        </div>
+        
+        <div class="row listing">
+          <div class="small-3 medium-3 large-3 columns databox">
+            Nom
+          </div>
+          <div class="small-9 medium-9 large-9 columns databox">
+              <input type="hidden" formControlName="x">
+              <input type="hidden" formControlName="y">
+              <input formControlName="playerName" type="text">
+          </div>
+        </div>  
+        <div class="row listing">
+          <div class="small-3 medium-3 large-3 columns databox">
+            Buts
+          </div>
+          <div class="small-9 medium-9 large-9 columns databox">
+            <input formControlName="goals" type="number" >
+          </div>
+        </div> 
+        <div class="row listing">
+          <div class="small-3 medium-3 large-3 columns databox">
+            Jaunes
+          </div>
+          <div class="small-9 medium-9 large-9 columns databox">
+              <input formControlName="yCards" type="number" >
+          </div>
+        </div> 
+        <div class="row listing">
+            <div class="small-3 medium-3 large-3 columns databox">
+              Rouges
+            </div>
+            <div class="small-9 medium-9 large-9 columns databox">
+                <input formControlName="rCards" type="number" >
+            </div>
+          </div>  
+        <div class="row listingFooter">
+          <div class="small-2 medium-2 large-2 columns boxFooter">
+          <input type="submit" class="button secondary small" value="Valider" [disabled]="!reactivePlayerForm.valid" (click)="onValidatePlayer()">
+          </div>
+          <div class="small-2 medium-2 large-2 columns boxFooter">
+              <input type="submit" class="button secondary small" value="Supprimer" [disabled]="!reactivePlayerForm.valid" (click)="onRemovePlayer()">
+          </div>
+          <div class="small-8 medium-8 large-8 columns boxFooter">
+              &nbsp;
+          </div>
+        </div>
+    </form>
+  </div>
+</div>  

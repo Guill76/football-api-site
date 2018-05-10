@@ -1,0 +1,43 @@
+<!--The whole content below can be removed with the new code.-->
+<div *ngIf="authenticationErr" class="alert centerAlt">Problème rencontré lors de l'authentification, veuillez réessayer </div>
+<div *ngIf="!isAuthenticated">
+  <form  [formGroup]="rForm" (ngSubmit)="connect()">
+    <div class="form-container">
+      <h2>{{title}}</h2>
+      <div class="row columns">
+        <label>
+          <span class="form-label">Login</span> 
+          <input type="text" formControlName="login">
+        </label>
+        <div class="alert" *ngIf="!rForm.controls['login'].valid && rForm.controls['login'].touched">
+          <!-- {{rForm.controls['login'].errors|json}} -->
+          {{rForm.controls['login'].msgErr}}
+        </div>
+        <label>
+         <span class="form-label"> Password </span>
+         <input type="password" formControlName="password">
+        </label>
+        <div class="alert" *ngIf="!rForm.controls['password'].valid && rForm.controls['password'].touched">
+          {{rForm.controls['password'].msgErr}}
+          <!-- {{rForm.controls['password'].errors|json}} -->
+        </div>
+        <input type="submit" class="mybutton" value="Se connecter" [disabled]="!rForm.valid">
+        <div class="alert" *ngIf="!rForm.valid && rForm.controls['login'].touched && rForm.controls['password'].touched">
+          utilisateur ou password invalides
+          <!-- {{rForm.controls['password'].errors|json}} -->
+        </div>
+      </div>
+  </div>
+  </form>
+</div>
+
+<!-- <ng-template #formInfo>
+  <div class="form-container">
+    <div class="row columns">
+      <h1>{{login}}</h1>
+      <h1>{{password}}</h1>
+    </div>
+  </div>
+</ng-template> -->
+
+

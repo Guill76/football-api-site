@@ -1,0 +1,1 @@
+db.soccerPitchProps.find({"teams.1.id":533},{"teams.players.name":1,"_id":0})

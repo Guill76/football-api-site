@@ -1,0 +1,87 @@
+<div class="containerPitch">
+    <div class="small-12 medium-12 large-12 columns"><router-outlet name='CompoOutlet'></router-outlet></div>
+</div>
+<div  class="containerBig">
+  <div #popup *ngIf="!closed" [ngClass]="{'container2':!closed,'closeContainer':closed}">
+    <div *ngIf="mode===1">
+      <div class="row listingHeader bg" >
+        <div class="small-1 medium-1 large-1 columns boxHeader">Match</div>
+        <div class="small-1 medium-1 large-1 columns boxHeader text-right"><i class="fa fa-arrow-left clickable" aria-hidden="true" (click)="lastD()"></i></div>
+        <div class="small-4 medium-4 large-4 columns databox text-center" >
+          
+          <label>
+            <select  class="small medium large" name="matchday" [ngModel]="matchday" (ngModelChange)="onChangeMatchDay($event)" >
+              <option >JOURNEE</option>
+              <option *ngFor="let v of matchDaysArr" [value]="v" [selected]="matchday==v">{{v}}eme journee</option>
+            </select>
+          </label>
+          
+        </div> 
+        <div class="small-2 medium-2 large-2 columns boxHeader text-left"><i class="fa fa-arrow-right clickable" aria-hidden="true" (click)="nextD()"></i></div>
+        <div class="small-1 medium-1 large-1 columns boxHeader text-left">Etat</div>
+        <div class="small-2 medium-2 large-2 columns boxHeader text-right">Date</div>
+        <div class="small-1 medium-1 large-1 columns boxHeader text-left">&nbsp;</div>
+      </div>
+      <div *ngIf="!loaded" class="row listing"  >
+          <div class="small-4 medium-4 large-4  columns">&nbsp;</div>
+          <div class="small-4 medium-4 large-4  columns text-center"><div class="loader"></div></div>
+          <div class="small-4 medium-4 large-4  columns">&nbsp;</div>
+      </div>
+      <div class="row listing" *ngFor="let obj of filterRes" >
+          <div class="small-3 medium-3 large-3 columns databox score"><span [ngClass]="{'bold won' : obj.result.goalsHomeTeam > obj.result.goalsAwayTeam}"><a [routerLink]="[{outlets:{CompoOutlet:['team',obj.homeTeamId,id]}}]" routerLinkActive='active-link'>{{obj.homeTeamName}}</a></span></div>
+          <div class="small-2 medium-2 large-2 columns databox text-left bold"><a [routerLink]="[{outlets:{CompoOutlet:['compo',obj.id,obj.awayTeamId,obj.homeTeamId]}}]" routerLinkActive='active-link'>{{obj.result.goalsHomeTeam}}-{{obj.result.goalsAwayTeam}}</a></div>
+          <!-- <div class="small-2 medium-2 large-2 columns databox text-left bold"><a (click)='openPitchCompo(obj.id)' >{{obj.result.goalsHomeTeam}}-{{obj.result.goalsAwayTeam}}</a></div> -->
+          <div class="small-3 medium-3 large-3  columns databox score"><span [ngClass]="{'bold won' : obj.result.goalsHomeTeam < obj.result.goalsAwayTeam}"><a [routerLink]="[{outlets:{CompoOutlet:['team',obj.awayTeamId,id]}}]" routerLinkActive='active-link'>{{obj.awayTeamName}}</a></span></div>
+          <div class="small-1 medium-1 large-1 columns databox text-left ">{{getStatus(obj.status)}}</div>
+          <div class="small-2 medium-2 large-2 columns databox text-right">{{obj.date|date:'dd/MM'}}</div>
+          <div class="small-1 medium-1 large-1 columns databox text-left">{{obj.date|date:'HH:mm'}}</div>
+      </div> 
+      <div class="row listingFooter">
+        <div class="small-5 medium-5 large-5 columns boxFooter"></div>
+        <div class="small-7 medium-7 large-7 columns boxFooter text-right">
+            <button class="button secondary medium margRight margTop" (click)="tableLeagueClicked()" ><span class="	glyphicon glyphicon-sort-by-order"></span> Classement</button>
+            <button class="button secondary medium margRight margTop" (click)="close()" ><span class="	glyphicon glyphicon-remove"></span> Close</button>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="mode===0">
+      <div class="row listingHeader bg" >
+        <div class="small-4 medium-4 large-4 columns boxHeader text-left" >Classement</div> 
+        <div class="small-1 medium-1 large-1 columns boxHeader text-right">Pts</div>
+        <div class="small-1 medium-1 large-1 columns boxHeader text-right">J</div>
+        <div class="small-1 medium-1 large-1 columns boxHeader text-right">G</div>
+        <div class="small-1 medium-1 large-1 columns boxHeader text-right">N</div>
+        <div class="small-1 medium-1 large-1 columns boxHeader text-right">P</div>
+        <div class="small-1 medium-1 large-1 columns boxHeader text-right">p.</div>
+        <div class="small-1 medium-1 large-1 columns boxHeader text-right">c.</div>
+        <div class="small-1 medium-1 large-1 columns boxHeader text-right">Diff</div>
+      </div>
+      <div *ngIf="!loaded" class="row listing"  >
+          <div class="small-4 medium-4 large-4  columns">&nbsp;</div>
+          <div class="small-4 medium-4 large-4  columns text-center"><div class="loader"></div></div>
+          <div class="small-4 medium-4 large-4  columns">&nbsp;</div>
+      </div>
+      <div class="row listing" *ngFor="let obj of homeMadeTable" >
+          <div class="small-1 medium-1 large-1 columns databox text-left">{{obj.rank}}</div>
+          <div class="small-3 medium-3 large-3 columns databox text-left"><a [routerLink]="[{outlets:{CompoOutlet:['team',obj.teamId,id]}}]" routerLinkActive='active-link'>{{obj.team}}</a></div>
+          <div class="small-1 medium-1 large-1 columns databox text-right fbold score">{{obj.points}}</div>
+          <div class="small-1 medium-1 large-1 columns databox text-right">{{obj.playedGames}}</div>
+          <div class="small-1 medium-1 large-1 columns databox text-right fbold score">{{obj.won}}</div>
+          <div class="small-1 medium-1 large-1 columns databox text-right fbold score">{{obj.nulls}}</div>
+          <div class="small-1 medium-1 large-1 columns databox text-right fbold score">{{obj.lost}}</div>
+          <div class="small-1 medium-1 large-1 columns databox text-right">{{obj.goals}}</div>
+          <div class="small-1 medium-1 large-1 columns databox text-right">{{obj.goalsAgainst}}</div>
+          <div class="small-1 medium-1 large-1 columns databox text-right">{{obj.goalDifference}}</div>
+      </div> 
+      <div class="row listingFooter">
+        <div class="small-5 medium-5 large-5  columns boxFooter"></div>
+        <div class="small-7 medium-7 large-7 columns boxFooter text-right">
+            <button class="button secondary medium margRight margTop" (click)="resultsClicked()" ><span class="	glyphicon glyphicon-sort-by-order"></span>Resultats</button>
+            <button class="button secondary medium margRight margTop" (click)="close()" ><span class="	glyphicon glyphicon-remove"></span> Close</button>
+            <!-- <button class="button secondary medium margRight margTop" (click)="displayLog()" ><span class="	glyphicon glyphicon-remove"></span> log</button> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  
+</div>

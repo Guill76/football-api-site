@@ -1,0 +1,96 @@
+<div class="containerRight">
+  <div class="row listingHeader">
+    <div class="small-4 medium-4 large-4 columns boxHeader">
+    </div>
+    <div class="small-4 medium-4 large-4 columns boxHeader">
+      Equipe  
+    </div>
+    <div class="small-4 medium-4 large-4 columns boxHeader">
+  
+    </div>
+  </div>
+  <div class="row listing" *ngIf="team$" >
+    <div class="small-2 medium-2 large-2 columns databox team">
+      <img [src]="team$.crestUrl" width="40px" height="40px" />
+    </div>
+    <div class="small-10 medium-10 large-10 columns databox team">
+      {{team$.name|uppercase}} 
+    </div>
+    <!-- <div class="small-4 medium-4 large-4 columns databox">
+      {{team$.squadMarketValue}} 
+    </div> -->
+  </div>
+  <div class="row listing" *ngIf="players$ && !fixtureMode" > 
+    <div class="small-3 medium-3 large-3 columns boxHeader">
+      Nom
+    </div>
+    <div class="small-3 medium-3 large-3 columns boxHeader">
+      Naissance  
+    </div>
+    <div class="small-3 medium-3 large-3 columns boxHeader">
+      Position  
+    </div>
+    <div class="small-3 medium-3 large-3 columns boxHeader">
+      Numero  
+    </div>
+  </div>
+  <div *ngIf="players$ && !fixtureMode">
+  <div class="row listing" *ngFor="let player of players$.players" >
+      <div class="small-3 medium-3 large-3 columns databox">
+        {{player.name}}
+      </div>
+      <div class="small-3 medium-3 large-3 columns databox">
+        {{player.dateOfBirth}} 
+      </div>
+      <div class="small-3 medium-3 large-3 columns databox">
+        {{player.position}}
+      </div>
+      <div class="small-3 medium-3 large-3 columns databox">
+        {{player.jerseyNumber}}
+      </div>
+  </div>
+  </div> 
+  <div *ngIf="fixtures$ && fixtureMode">
+      <div class="row listing" *ngIf="fixtures$ && fixtureMode" > 
+          <div class="small-3 medium-3 large-3 columns boxHeader">
+            &nbsp;
+          </div>
+          <div class="small-2 medium-2 large-2 columns boxHeader">
+            Match
+          </div>
+          <div class="small-3 medium-3 large-3 columns boxHeader">
+          &nbsp;
+          </div>
+          <div class="small-3 medium-3 large-3 columns boxHeader">
+            Date
+          </div>
+          <div class="small-1 medium-1 large-1 columns boxHeader  ">
+            Jrn
+          </div>
+      </div>
+      <div class="row listing" *ngFor="let fixture of fixtures$.fixtures" >
+          <div class="small-3 medium-3 large-3 columns databox">
+              <span [ngClass]="{'bold won' : fixture.homeTeamId == id}">{{fixture.homeTeamName}}</span>
+          </div>
+          <div class="small-2 medium-2 large-2 columns databox">
+              {{fixture.result.goalsHomeTeam}}-{{fixture.result.goalsAwayTeam}}
+            </div>
+          <div class="small-3 medium-3 large-3 columns databox">
+              <span [ngClass]="{'bold won' : fixture.awayTeamId == id}">{{fixture.awayTeamName}}</span>
+          </div>
+          <div class="small-3 medium-3 large-3 columns databox">
+            {{fixture.date|date:'dd/MM/yy'}}
+          </div>
+          <div class="small-1 medium-1 large-1 columns databox">
+            {{fixture.matchday}}
+          </div>
+      </div>
+  </div> 
+  <div class="row listingFooter">
+    <div class="small-5 medium-5 large-5 columns boxFooter"></div>
+    <div class="small-7 medium-7 large-7 columns boxFooter text-right">
+        <button class="button secondary medium margRight margTop" (click)="close()"><span class="glyphicon glyphicon-remove"></span> Close</button>
+        <button class="button secondary medium margRight margTop" (click)="displayCal()"><i class="fa fa-calendar" aria-hidden="true"></i> {{toggleCaption}}</button>
+    </div>
+  </div>
+</div>

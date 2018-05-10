@@ -1,0 +1,25 @@
+.navbar{
+    /* background-image: linear-gradient(to right,#091F03,#BCE4B2); */
+    background: #091F03;
+    color: #fff;
+    font-size: 0.9em;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+a{
+    margin-left: 5px;
+    color: #fff;
+    font-size: 0.9em;
+}
+a:hover{
+    color : #ff0000;
+}
+.active-link{
+    color: #ff0000;
+}
+.timer{
+    margin-left: 5px;
+    color: #fff;
+    font-size: 0.7em;
+}
+

@@ -1,0 +1,37 @@
+<div class="container">
+  <div class="row listingHeader" >
+      <!-- <div class="large-3 columns boxHeader">Id</div> -->
+      <div class="small-6 medium-6 large-6 columns boxHeader">League</div>
+      <div class="small-2 medium-2 large-2 columns boxHeader text-center">Journee</div>
+      <div class="small-4 medium-4 large-4 columns boxHeader text-center">Actualisé le</div>
+      <!-- <div class="small-2 medium-2 large-2 columns boxHeader text-center">Resultats</div>
+      <div class="small-2 medium-2 large-2 columns boxHeader text-right">Classement</div> -->
+    </div>
+    <div *ngIf="!loaded" class="row listing"  >
+        <div class="small-4 medium-4 large-4 columns">&nbsp;</div>
+        <div class="small-4 medium-4 large-4 columns text-center"><div class="loader"></div></div>
+        <div class="small-4 medium-4 large-4 columns">&nbsp;</div>
+    </div>
+    <div class="row listing" *ngFor="let obj of data" >
+      <!-- <div class="large-3 columns databox">{{obj._id}}</div> -->
+      <div class="small-6 medium-6 large-6 columns databox"><a [routerLink]="[{outlets:{resultOut:['results',obj.id]}}]" routerLinkActive='active-link'>{{obj.caption}}</a></div>
+      <div class="small-2 medium-2 large-2 columns databox text-center">{{obj.currentMatchday}}</div>
+      <div class="small-4 medium-4 large-4 columns databox text-center">{{obj.lastUpdated|date:'dd-MM-yyyy'}}</div>    
+    </div>  
+    <div class="row listingFooter">
+      <div class="small-5 medium-5 large-5 columns boxFooter">
+        <!-- <button class="button secondary small" (click)="addUser()" ><span class="	glyphicon glyphicon-plus"></span> Add new</button>
+        <button class="button secondary small" (click)="refreshUsers()" ><span class="	glyphicon glyphicon-refresh"></span> Refresh</button> -->
+        <!-- <button class="button secondary small medium margTop margLeft" (click)="onDisplay()" ><span class="	glyphicon glyphicon-refresh"></span> Display</button> -->
+        Choix des compétitions
+      </div>
+      <div class="small-7 medium-7 large-7 columns boxFooter clickable text-right centerpad">
+          <button class="button secondary small" (click)="showLive()">Live &nbsp;<i class="fa fa-bolt" aria-hidden="true"  (click)="showLive()"></i> </button>
+         
+      </div>
+    </div>
+</div>
+<div class="resultsContent">
+  <router-outlet name='resultOut'></router-outlet>
+</div>
+

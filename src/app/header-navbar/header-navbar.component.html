@@ -1,0 +1,116 @@
+<div class="navbar">
+  <ul>
+    <li class="dropdown">
+      <a href="javascript:void(0)" class="dropbtn"><i class="fa fa-user-o" aria-hidden="true"></i>Profil</a>
+      <div class="dropdown-content">
+        <a *ngIf="!isConnected()" routerLink='/login' routerLinkActive='active-link'><i class="fa fa-power-off" aria-hidden="true"></i>&nbsp;Se connecter</a>
+        <a *ngIf="isConnected()" routerLink='/logout' routerLinkActive='active-link'><i class="fa fa-power-off" aria-hidden="true"></i>&nbsp;Déconnexion ( {{getUser()|firstToUpper}} )</a>
+        <a  routerLink='/main' routerLinkActive='active-link'><i class="fa fa-user-plus" aria-hidden="true"></i>&nbsp;Admininstration</a>
+      </div>
+    </li>
+    <li class="dropdown">
+    <a href="javascript:void(0)" class="dropbtn"><i class="fa fa-futbol-o" aria-hidden="true"></i>Football</a>
+          <div class="dropdown-content">
+            <a  *ngIf="isConnected()" routerLink='/soccer-results' routerLinkActive='active-link'><i class="fa fa-list" aria-hidden="true"></i>&nbsp;Resultats Classements</a>
+            <a *ngIf="isConnected()" routerLink='/soccerPitch' routerLinkActive='active-link'>Compositions(En cours)</a>
+          </div>
+    </li>
+    <li class="dropdown">
+        <a href="javascript:void(0)" class="dropbtn"><i class="fa fa-music" aria-hidden="true"></i>Musique</a>
+        <div class="dropdown-content">
+            <a href="#">Albums (A venir)</a>
+            <a href="#">Concerts (A venir)</a>
+            <a href="#">Blind test (A venir)</a>
+        </div>
+    </li>
+    <li class="dropdown">
+        <a href="javascript:void(0)" class="dropbtn"><i class="fa fa-film" aria-hidden="true"></i>Cinema</a>
+        <div class="dropdown-content">
+            <a href="#">Films (A venir)</a>
+            <a href="#">-</a>
+        </div>
+    </li>
+    <!-- <li><span class="timer">{{timer.time | date: 'dd/MM HH:mm' }}</span></li>  -->
+  </ul>
+  <!-- <a *ngIf="!isConnected()" routerLink='/login' routerLinkActive='active-link'>Se connecter</a>
+  <a  routerLink='/main' routerLinkActive='active-link'>Accueil</a>
+  <a  *ngIf="isConnected()" routerLink='/soccer-results' routerLinkActive='active-link'>Resultats Football</a>
+  <a *ngIf="isConnected()" routerLink='/logout' routerLinkActive='active-link'>Déconnexion ( {{getUser()|firstToUpper}} )</a> -->
+  
+  <div class="notif" *ngIf="notifSrv.notif">
+    <div class="row" >
+      <div class="small-2 medium-2 large-2 columns">
+        <div *ngIf="notifSrv.notif.level ==='SUCCESS'" class="glyphicon glyphicon-ok-sign success"></div>
+        <div *ngIf="notifSrv.notif.level ==='WARN'" class="glyphicon glyphicon-warning-sign warn"></div>
+        <div *ngIf="notifSrv.notif.level ==='INFO'" class="fa fa-info-circle info"></div>
+      </div>
+      <div class="small-8 columns">
+          <div *ngIf="notifSrv.notif.level ==='SUCCESS'" class="success-msg" >{{notifSrv.notif.message}}</div>
+          <div *ngIf="notifSrv.notif.level ==='WARN'" class="warn-msg" >{{notifSrv.notif.message}}</div>
+          <div *ngIf="notifSrv.notif.level ==='INFO'" class="info-msg" >{{notifSrv.notif.message}}</div>
+      </div>
+      <div class="small-2 medium-2 large-2 columns text-right close text-centers">
+          <span  class="clickable glyphicon glyphicon-remove"  (click)="close()" ></span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="small-2 medium-2 large-2 columns">
+      &nbsp;      
+      </div>
+      <div class="small-8 medium-8 large-8  columns">
+        &nbsp;
+      </div>
+      <div class="small-2 medium-2 large-2 columns text-right">
+      </div>
+    </div>
+  </div>
+  <div class="liveHeader" *ngIf="live.show">
+    <div class="row" >
+      <div class="small-2 medium-2 Large-2 columns centerpad text-center">
+        <i class="fa fa-bolt fa-2x" aria-hidden="true"></i>
+      </div>
+      <div class="small-8 medium-8 Large-8 columns centerpad text-center">
+         <span class="ftitle">Matchs en direct ({{live.liveResults.length}})</span>
+      </div>
+      <div class="small-2 medium-2 Large-2 columns text-right close_live clickable centerpad">
+        <i class="fa fa-window-close fa-2x" aria-hidden="true"  (click)="closeLive()"></i>
+      </div>
+    </div>
+  </div>
+  <div class="live" *ngIf="live.show">
+    <div class="row" ><div class="small-12  medium-12 Large-12 columns">&nbsp;</div> </div>
+    <div *ngIf="live.liveResults.length==0" class="row" ><div class="small-12  medium-12 Large-12 columns">Il n'y a pas de match en cours</div> </div>
+    <div class="row" *ngFor="let obj of live.liveResults">
+      <div class="small-3  medium-3 Large-3 columns centerpad text-left">
+        {{obj.homeTeamName}}      
+      </div>
+      <div class="small-1  medium-1 Large-1 columns centerpad text-left">
+          <span class="liveScores">{{obj.result.goalsHomeTeam}}-{{obj.result.goalsAwayTeam}}</span>
+      </div>
+       <div class="small-3  medium-3 Large-3 columns centerpad text-left">
+      {{obj.awayTeamName}}
+      </div>
+      <div class="small-2  medium-2 Large-2 columns centerpad text-right">Début</div>
+      <div class="small-1  medium-1 Large-1 columns centerpad text-right">{{obj.date | date: 'HH:mm'}}</div>
+      <div class="small-2  medium-2 Large-2 columns centerpad text-center">
+        <a [routerLink]="['soccer-results',{outlets:{resultOut:['results',obj.competitionId]}}]"><i class="fa fa-bars" aria-hidden="true"></i></a>
+      </div>
+   </div>
+   <div class="row" ><div class="small-12 medium-12 Large-12 columns">&nbsp;</div> </div>
+   <div class="row" ><div class="small-4 medium-4 Large-4 columns"><span class="ftitle">A venir:</span> </div><div class="small-8  medium-8 Large-8 columns">&nbsp;</div> </div>
+   <div class="row" ><div class="small-12 medium-12 Large-12 columns">&nbsp;</div> </div>
+   <div class="row" *ngFor="let comEvt of live.liveComing; let i=index" >
+     <div *ngIf="i<10">
+     <!-- <div class="small-2  medium-2 Large-2 columns"> </div> -->
+     <div class="small-4  medium-4 Large-4 columns centerpad text-left">{{comEvt.homeTeamName}}</div>
+     <div class="small-1  medium-1 Large-1 columns centerpad text-center">-</div>
+     <div class="small-4  medium-4 Large-4 columns centerpad text-left">{{comEvt.awayTeamName}}</div>
+     <div class="small-3  medium-3 Large-3 columns centerpad text-right">{{comEvt.date|date: 'dd/MM HH:mm'}}</div>
+     </div>
+  </div>
+  <div class="row" >
+      <div class="small-2  medium-2 Large-2 columns"> </div>
+     <div class="small-10  medium-10 Large-10 columns">&nbsp;</div>
+  </div>
+</div>
+

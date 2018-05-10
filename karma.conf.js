@@ -16,13 +16,42 @@ module.exports = function (config) {
       clearContext: false // leave Jasmine Spec Runner output visible in browser
     },
     coverageIstanbulReporter: {
-      dir: require('path').join(__dirname, 'coverage'), reports: [ 'html', 'lcovonly' ],
-      fixWebpackSourcePaths: true
+      dir: require('path').join(__dirname, 'coverage'), reports: [ 'html', 'lcovonly', 'text-summary' ],
+      fixWebpackSourcePaths: true,
+      combineBrowserReports: true,
+      skipFilesWithNoCoverage: true,
+      'report-config': {
+        // all options available at: https://github.com/istanbuljs/istanbuljs/blob/aae256fb8b9a3d19414dcf069c592e88712c32c6/packages/istanbul-reports/lib/html/index.js#L135-L137
+        html: {
+          // outputs the report in ./coverage/html
+          subdir: 'html'
+        }
+      },
+      thresholds: {
+        emitWarning: false, // set to `true` to not fail the test command when thresholds are not met
+        global: { // thresholds for all files
+          statements: 100,
+          lines: 100,
+          branches: 100,
+          functions: 100
+        },
+        each: { // thresholds per file
+          statements: 100,
+          lines: 100,
+          branches: 100,
+          functions: 100,
+          // overrides: {
+          //   'baz/component/**/*.js': {
+          //     statements: 100
+          //   }
+          // }
+        }
+      }
     },
     angularCli: {
       environment: 'dev'
     },
-    reporters: ['progress', 'kjhtml'],
+    reporters: ['progress', 'kjhtml', 'coverage-istanbul'],
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,

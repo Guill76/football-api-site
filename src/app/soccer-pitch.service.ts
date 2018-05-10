@@ -1,10 +1,10 @@
+import {throwError as observableThrowError,  Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 
-import { Http, Response ,Headers, RequestOptions} from '@angular/http';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/observable/throw';
+import { Http, Response, Headers, RequestOptions} from '@angular/http';
+
+
+
 
 import { ConfigService } from './config.service';
 
@@ -14,10 +14,10 @@ export class SoccerPitchService {
   constructor(private http: Http, public config: ConfigService) {
   }
   private extractData(res: Response) {
-    let body = res.json();
+    const body = res.json();
     return body || { };
   }
-  private handleError (error  : Response | any) {
+  private handleError (error: Response | any) {
     let errMsg: string;
     if (error instanceof Response) {
       const body = error.json() || '';
@@ -26,20 +26,21 @@ export class SoccerPitchService {
     } else {
       errMsg = error.message ? error.message : error.toString();
     }
-    return Observable.throw(error);
+    return observableThrowError(error);
   }
-  postProperties(props){
-    return this.http.post(this.config.baseUrlApi+'/api/soccerPitch',props).map(this.extractData).catch(this.handleError.bind(this));
+  postProperties(props) {
+    return this.http.post(this.config.baseUrlApi + '/api/soccerPitch', props).map(this.extractData).catch(this.handleError.bind(this));
   }
-  getProperties(){
-    return this.http.get(this.config.baseUrlApi+'/api/soccerPitch').map(this.extractData).catch(this.handleError.bind(this));
+  getProperties() {
+    return this.http.get(this.config.baseUrlApi + '/api/soccerPitch').map(this.extractData).catch(this.handleError.bind(this));
   }
-  deleteProperties(id){
-    return this.http.delete(this.config.baseUrlApi+'/api/soccerPitch/'+id).map(this.extractData).catch(this.handleError.bind(this));
+  deleteProperties(id) {
+    return this.http.delete(this.config.baseUrlApi + '/api/soccerPitch/' + id).map(this.extractData).catch(this.handleError.bind(this));
   }
-  updateProperties(propertyObject){
-    //console.log('id transmis',propertyObject);
-    return this.http.put(this.config.baseUrlApi+'/api/soccerPitch',propertyObject).map(this.extractData).catch(this.handleError.bind(this));
+  updateProperties(propertyObject) {
+    // console.log('id transmis',propertyObject);
+    return this.http.put(this.config.baseUrlApi + '/api/soccerPitch', propertyObject)
+      .map(this.extractData).catch(this.handleError.bind(this));
   }
 
 

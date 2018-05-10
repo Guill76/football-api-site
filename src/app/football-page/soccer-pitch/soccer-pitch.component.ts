@@ -6,10 +6,10 @@ import { UsersService } from '../../users.service';
 import { NotificationService } from '../../notification.service';
 
 import { Router, ActivatedRoute, ParamMap, NavigationEnd } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/switchMap';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/filter';
+import { Observable } from 'rxjs';
+
+
+
 //import 'rxjs/Rx';
 
 //Directions possibles

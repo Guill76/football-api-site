@@ -1,9 +1,10 @@
+
+import {throwError as observableThrowError,  Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { Http, Response , Headers, RequestOptions} from '@angular/http';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/observable/throw';
+
+
+
 
 import {NotificationService} from './notification.service';
 
@@ -33,7 +34,7 @@ export class FootDbApiService {
     }
     this.notifServ.notify('Un problème est survenu lors du chargement des données de l\'API footdata' , 'WARN', 6000);
     this.loaded = true;
-    return Observable.throw(error);
+    return observableThrowError(error);
   }
 
   getObsRequest(name: string, paramXRespControl:  string = 'minified') {

@@ -1,13 +1,13 @@
+
+import {throwError as observableThrowError,  Observable ,  Subject } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { Http, Response ,Headers} from '@angular/http';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
 import { ConfigService} from './config.service';
 import { NotificationService } from './notification.service'
 import { WebsocketService } from './websocket.service';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/observable/throw';
+
+
+
 
 
 @Injectable()
@@ -33,7 +33,7 @@ export class UsersService {
     } else {
       errMsg = error.message ? error.message : error.toString();
     }
-    return Observable.throw(error);
+    return observableThrowError(error);
   }
 
   authenticate(user):Observable<any>{

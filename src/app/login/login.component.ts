@@ -4,8 +4,7 @@ import { NotificationService} from '../notification.service';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, FormControl, ValidatorFn, AsyncValidatorFn } from '@angular/forms';
 import { WebsocketService } from '../websocket.service';
-import {Observable} from 'rxjs/Observable';
-import {Subject} from 'rxjs/Subject';
+import {Observable, Subject} from 'rxjs';
 
 export class mFormControl extends FormControl {
   constructor(formState?: any, alertMsg?: string | null, 

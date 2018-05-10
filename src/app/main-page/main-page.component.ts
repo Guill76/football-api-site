@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, Validators, FormControl, ValidatorFn} from '@angular/forms';
 import { Subscription } from 'rxjs/rx';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/observable/throw';
+
+
+
 
 import { NotificationService } from '../notification.service';
 import { UsersService } from '../users.service';

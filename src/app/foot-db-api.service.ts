@@ -43,6 +43,7 @@ export class FootDbApiService {
       'X-Response-Control': paramXRespControl });
     const options = new RequestOptions({ headers: headers });
     this.resObs = this.http.get(this.apiUrl + name, options).map(this.extractData).catch(this.handleError.bind(this));
+    // console.log ('Real foot-db');
     return this.resObs;
   }
   loadData(name: string) {

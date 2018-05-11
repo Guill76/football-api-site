@@ -66,7 +66,7 @@ export class FootResultsComponent implements OnInit, OnDestroy {
   filterRes = null;
 
   // Nombre de journées liées au championnat choisi
-  numOfFix: number;
+  numOfFix = 0;
 
   // myTable
   homeMadeTable;
@@ -79,7 +79,6 @@ export class FootResultsComponent implements OnInit, OnDestroy {
 
   constructor(private route: ActivatedRoute,
     private router: Router, private api: FootDbApiService, private notifSrv: NotificationService) {
-      this.numOfFix = 0;
   }
 
   ngOnInit() {
@@ -89,7 +88,8 @@ export class FootResultsComponent implements OnInit, OnDestroy {
       return this.api.getObsRequest('competitions/' + this.id + '/fixtures');
     }).map((data) => {
       this.results = data.fixtures;
-      return data.fixtures.filter((val: any) => val.status === 'FINISHED' || val.status === 'IN_PLAY');
+      console.log ( 'foot-result-component onInit');
+      return data.fixtures.filter((val: any) => (val.status === 'FINISHED' || val.status === 'IN_PLAY'));
     })
     .subscribe(
       (result) => {

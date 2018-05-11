@@ -76,7 +76,7 @@ describe('FootResultsComponent', () => {
     component.ngOnInit();
     fixture.whenStable().then(() => {
       fixture.detectChanges();
-      expect(component.matchday).toBe(2);
+      expect(component.matchday).toBe(3);
       expect(component.numOfFix).toBe(3);
     });
   }));
@@ -89,12 +89,14 @@ describe('FootResultsComponent', () => {
     });
   }));
   it('Should compute the next matchday',  async(() => {
+    const now = new Date();
     fixture.detectChanges();
     component.ngOnInit();
     fixture.whenStable().then(() => {
       fixture.detectChanges();
       expect(component.nextMatchday.toLocaleDateString()).
-        toBe(new Date('2018-05-20T14:00:00Z').toLocaleDateString());
+        toBe(new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1,
+        now.getHours(), now.getMinutes(), now.getSeconds()).toLocaleDateString());
     });
   }));
   it('Should not compute nextMatchDay when no next match',  async(() => {
@@ -105,6 +107,24 @@ describe('FootResultsComponent', () => {
       fixture.detectChanges();
       expect(component.nextMatchday).
         toBeNull();
+    });
+  }));
+  it('Should check if no data is returned',  async(() => {
+    fixture.detectChanges();
+    ConfigTestingData.key = 'nothing';
+    component.ngOnInit();
+    fixture.whenStable().then(() => {
+      fixture.detectChanges();
+      expect(component.results).toBeUndefined();
+    });
+  }));
+  it('Should check if table of empty fixtures is return',  async(() => {
+    fixture.detectChanges();
+    ConfigTestingData.key = 'emptyFixtures';
+    component.ngOnInit();
+    fixture.whenStable().then(() => {
+      fixture.detectChanges();
+      expect(component.results.length).toBe(0);
     });
   }));
   it('Should build and switch to the table league view',  async(() => {

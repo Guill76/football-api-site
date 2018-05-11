@@ -1,5 +1,5 @@
 import { throwError as observableThrowError,  Observable } from 'rxjs';
-import { serviceRes, serviceResNoNextMatch } from './data/data';
+import { serviceRes, serviceResNoNextMatch, serviceResNothing, serviceResEmptyFixtures } from './data/data';
 export class ConfigTestingData {
     private static _key = 'nominal';
     static set key(key: string) {
@@ -12,6 +12,8 @@ export class ConfigTestingData {
     }
     private static nominal = serviceRes;
     private static noNextMatch = serviceResNoNextMatch;
+    private static nothing = serviceResNothing;
+    private static emptyFixtures = serviceResEmptyFixtures;
 }
 
 export class MockFootDbApiService {

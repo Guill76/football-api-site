@@ -1,3 +1,4 @@
+const now = new Date();
 export const serviceRes = JSON.stringify({
     count: 6,
     fixtures: [
@@ -56,7 +57,8 @@ export const serviceRes = JSON.stringify({
         {
             id: 5,
             competitionId: 448,
-            date: '2018-05-20T21:00:00Z',
+            date: new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1,
+                now.getHours(), now.getMinutes(), now.getSeconds()).toJSON(),
             status: 'PLANNED',
             matchday: 3,
             homeTeamName: 'Equipe 1',
@@ -69,7 +71,8 @@ export const serviceRes = JSON.stringify({
         {
             id: 6,
             competitionId: 448,
-            date: '2018-05-20T14:00:00Z',
+            date: new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1,
+                now.getHours(), now.getMinutes(), now.getSeconds()).toJSON(),
             status: 'PLANNED',
             matchday: 3,
             homeTeamName: 'Equipe 3',
@@ -82,7 +85,8 @@ export const serviceRes = JSON.stringify({
     ]
 });
 
-
+export const serviceResNothing = JSON.stringify({});
+export const serviceResEmptyFixtures = JSON.stringify({ count: 0, fixtures: []});
 export const serviceResNoNextMatch = JSON.stringify({
     count: 6,
     fixtures: [
@@ -154,7 +158,8 @@ export const serviceResNoNextMatch = JSON.stringify({
         {
             id: 6,
             competitionId: 448,
-            date: '2018-05-20T14:00:00Z',
+            date: new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1,
+                now.getHours(), now.getMinutes(), now.getSeconds()).toJSON(),
             status: 'PLANNED',
             matchday: 3,
             homeTeamName: 'Equipe 3',

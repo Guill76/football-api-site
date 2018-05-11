@@ -6,6 +6,7 @@ import 'rxjs/Rx';
 
 import { NotificationService } from '../../notification.service';
 import { FootDbApiService } from '../../foot-db-api.service';
+import { isArray } from 'util';
 
 export const ALLSTATUS = {
   'FINISHED': 'Fini', 'TIMED': 'Plan.', 'SCHEDULED': 'A def.',
@@ -89,34 +90,38 @@ export class FootResultsComponent implements OnInit, OnDestroy {
     }).map((data) => {
       this.results = data.fixtures;
       console.log ( 'foot-result-component onInit');
-      return data.fixtures.filter((val: any) => (val.status === 'FINISHED' || val.status === 'IN_PLAY'));
+      return data.fixtures.filter((val: any) =>  (val.status === 'FINISHED' || val.status === 'IN_PLAY'));
     })
     .subscribe(
       (result) => {
         const prevMode = this.mode;
         this.loaded = true;
         this.filterRes = result;
-        this.notifSrv.notify('Les données de l\'API FootballData.org ont été chargées avec succès', 'SUCCESS', 2000);
-        this.numOfFix = parseInt( this.results[this.results.length - 1].matchday, 10);
-        this.matchday = parseInt(this.filterRes[this.filterRes.length - 1].matchday, 10);
-        this.lastMatchday = new Date(this.filterRes[this.filterRes.length - 1].date);
-        const tabNmd = this.results.filter(val => {
-          return(val.matchday === this.matchday + 1) ;
-        });
-        this.nextMatchday = (tabNmd && tabNmd.length > 0) ? new Date(tabNmd[0].date) : null;
-        const now = new Date();
-        if (this.nextMatchday) {
-          if ( (this.nextMatchday.getTime() - now.getTime() < now.getTime() - this.lastMatchday.getTime() &&
-            this.matchday !== this.numOfFix) ) {
-          this.matchday++;
+        if (isArray(this.results)) {
+          this.notifSrv.notify('Les données de l\'API FootballData.org ont été chargées avec succès', 'SUCCESS', 2000);
+          if (this.results.length > 0) {
+            this.numOfFix = parseInt( this.results[this.results.length - 1].matchday, 10);
+            this.matchday = parseInt(this.filterRes[this.filterRes.length - 1].matchday, 10);
+            this.lastMatchday = new Date(this.filterRes[this.filterRes.length - 1].date);
+            const tabNmd = this.results.filter(val => {
+                return(val.matchday === this.matchday + 1) ;
+            });
+            this.nextMatchday = (tabNmd && tabNmd.length > 0) ? new Date(tabNmd[0].date) : null;
+            const now = new Date();
+            if (this.nextMatchday) {
+              if ( (this.nextMatchday.getTime() - now.getTime() < now.getTime() - this.lastMatchday.getTime() &&
+                this.matchday !== this.numOfFix) ) {
+              this.matchday++;
+              }
+            }
+            this.matchDaysArr = Array(this.numOfFix);
+            this.matchDaysArr = this.matchDaysArr.fill().map((x, i) => i + 1);
+            this.filterRes = this.results.filter(val =>  parseInt(val.matchday, 10) === this.matchday);
           }
-        }
-        this.matchDaysArr = Array(this.numOfFix);
-        this.matchDaysArr = this.matchDaysArr.fill().map((x, i) => i + 1);
-        this.filterRes = this.results.filter(val =>  parseInt(val.matchday, 10) === this.matchday);
-        this.closed = false;
-        if (prevMode === MODES.LEAGUETABLE) {
-          this.tableLeagueClicked();
+          this.closed = false;
+          if (prevMode === MODES.LEAGUETABLE) {
+            this.tableLeagueClicked();
+          }
         }
       },
       (err) => {

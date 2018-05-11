@@ -38,6 +38,7 @@ export class FootResultsComponent implements OnInit, OnDestroy {
   // timeout pour fermer la popup avec effet
   tm: any;
 
+  out: boolean;
   // Journee
   matchday: number;
 
@@ -45,11 +46,6 @@ export class FootResultsComponent implements OnInit, OnDestroy {
   lastMatchday: Date;
   // resultats
   results: any;
-
-  // Classements resultats
-  tbLRes: any = null;
-
-  allTbLRes = null;
 
   // Flag Resultats visibles
   closed = false;
@@ -83,13 +79,14 @@ export class FootResultsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.out = false;
     // let result$:Observable<any>;
     this.subscription = this.route.params.switchMap((val) => {
       this.id = val.id;
       return this.api.getObsRequest('competitions/' + this.id + '/fixtures');
     }).map((data) => {
       this.results = data.fixtures;
-      console.log ( 'foot-result-component onInit');
+      // console.log ( 'foot-result-component onInit');
       return data.fixtures.filter((val: any) =>  (val.status === 'FINISHED' || val.status === 'IN_PLAY'));
     })
     .subscribe(
@@ -131,23 +128,25 @@ export class FootResultsComponent implements OnInit, OnDestroy {
         this.router.navigateByUrl('soccer-results');
         // location.reload(true);
         this.id = null;
-      },
-      () => {
-        console.log('Completed');
       }
+      // ,
+      // () => {
+      //   console.log('Completed');
+      // }
     );
   }
 
-  displayLog() {
-    console.log(this.results);
- }
+//   displayLog() {
+//     console.log(this.results);
+//  }
 
   openPitchCompo(id) {
+    this.out = true;
     this.router.navigate([[{outlets: {CompoOutlet: ['compo', id]}}]]);
-    console.log(this.router.parseUrl(this.router.url));
-    console.log(id);
-    console.log(this.router);
-    console.log(this.router.url);
+    // console.log(this.router.parseUrl(this.router.url));
+    // console.log(id);
+    // console.log(this.router);
+    // console.log(this.router.url);
   }
   onChangeMatchDay(newVal) {
     this.matchday = parseInt(newVal, 10);
@@ -175,11 +174,15 @@ export class FootResultsComponent implements OnInit, OnDestroy {
   }
   ngOnDestroy() {
     this.closed = true;
-    if (this.tbLRes && this.tbLRes.length > 0) {
-      this.tbLRes.splice(0, this.tbLRes.length);
-      this.tbLRes = null;
+    if (this.results && this.results.length > 0) {
+      this.results.splice(0, this.results.length);
+      this.results = null;
     }
-    console.log('Destroying component: Unsubscribing Observables & clearing timers');
+    if (this.filterRes && this.filterRes.length > 0) {
+      this.filterRes.splice(0, this.filterRes.length);
+      this.filterRes = null;
+    }
+    console.log('Clearing objects');
     if (this.tm) {
       clearTimeout(this.tm);
     }

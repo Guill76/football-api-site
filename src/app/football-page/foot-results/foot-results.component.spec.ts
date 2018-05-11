@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, DebugElement  } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 // import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
@@ -20,22 +20,49 @@ import { ConfigTestingData, MockFootDbApiService } from './foot-result-mock-serv
   template: ''
   }
 ) class FootballPageComponent {}
+@Component(
+  {
+  template: ''
+  }
+) class SoccerPitchComponent {}
+@Component(
+  {
+  template: ''
+  }
+) class FootballTeamsComponent {}
 describe('FootResultsComponent', () => {
   let component: FootResultsComponent;
   let serviceDb: FootDbApiService;
   // let serviceNotif: NotificationService;
   let fixture: ComponentFixture<FootResultsComponent>;
+  let initMd: number;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports:      [ BrowserModule, HttpModule, FormsModule, RouterTestingModule.withRoutes(
         [{
           path: 'soccer-results',
-          component: FootballPageComponent
+          component: FootballPageComponent,
+          children: [{
+            path: 'results/:id',
+            component: FootResultsComponent,
+            outlet: 'resultOut',
+            children: [{
+              path: 'compo/:id/:awayTeamId/:homeTeamId',
+              component: SoccerPitchComponent,
+              outlet: 'CompoOutlet',
+            },
+            {
+              path: 'team/:id/:league',
+              component: FootballTeamsComponent,
+              outlet: 'CompoOutlet',
+            }
+            ]
+          }]
         }]
       )],
       providers: [FootDbApiService, NotificationService],
-      declarations: [ FootResultsComponent, FootballPageComponent ]
+      declarations: [FootResultsComponent, FootballPageComponent, SoccerPitchComponent, FootballTeamsComponent]
     });
     TestBed.overrideComponent(FootResultsComponent, {
       set: {
@@ -57,7 +84,7 @@ describe('FootResultsComponent', () => {
     // spyOn( serviceDb, 'getObsRequest').and.returnValue(Observable.of(res));
   });
 
-  it('should be created', () => {
+  it('#should be created', () => {
     expect(component).toBeTruthy();
   });
   it('should have got some results after onInit',  async(() => {
@@ -109,6 +136,25 @@ describe('FootResultsComponent', () => {
         toBeNull();
     });
   }));
+  it('Should reset the previous mode to tableleague button if mode is allready tableleague',  async(() => {
+    fixture.detectChanges();
+    component.mode = MODES.LEAGUETABLE;
+    component.ngOnInit();
+
+    fixture.whenStable().then(() => {
+      fixture.detectChanges();
+      expect(component.mode).toBe(MODES.LEAGUETABLE);
+    });
+  }));
+  it('Should change match day after init to first match day',  async(() => {
+    fixture.detectChanges();
+    component.ngOnInit();
+    component.onChangeMatchDay(1);
+    fixture.whenStable().then(() => {
+      fixture.detectChanges();
+      expect(component.matchday).toBe(1);
+    });
+  }));
   it('Should check if no data is returned',  async(() => {
     fixture.detectChanges();
     ConfigTestingData.key = 'nothing';
@@ -127,6 +173,67 @@ describe('FootResultsComponent', () => {
       expect(component.results.length).toBe(0);
     });
   }));
+  it('Should sort ranking table with goals diff for exaequo first',  async(() => {
+    fixture.detectChanges();
+    ConfigTestingData.key = 'goalDiff';
+    component.ngOnInit();
+    fixture.whenStable().then(() => {
+      fixture.detectChanges();
+      component.tableLeagueClicked();
+      expect(component.homeMadeTable[0].points).toBe(component.homeMadeTable[1].points);
+      expect(component.homeMadeTable[0].goalDifference).toBeGreaterThan(component.homeMadeTable[1].goalDifference);
+    });
+  }));
+  it('Should sort ranking table with goals diff for exaequo last',  async(() => {
+    fixture.detectChanges();
+    ConfigTestingData.key = 'goalDiff';
+    component.ngOnInit();
+    fixture.whenStable().then(() => {
+      fixture.detectChanges();
+      component.tableLeagueClicked();
+      expect(component.homeMadeTable[2].points).toBe(component.homeMadeTable[3].points);
+      expect(component.homeMadeTable[2].goalDifference).toBeGreaterThan(component.homeMadeTable[3].goalDifference);
+    });
+  }));
+  it('Should sort ranking table with goals for exaequo first',  async(() => {
+    fixture.detectChanges();
+    ConfigTestingData.key = 'goals';
+    component.ngOnInit();
+    fixture.whenStable().then(() => {
+      fixture.detectChanges();
+      component.tableLeagueClicked();
+      expect(component.homeMadeTable[0].points).toBe(component.homeMadeTable[1].points);
+      expect(component.homeMadeTable[0].goalDifference).toBe(component.homeMadeTable[1].goalDifference);
+      expect(component.homeMadeTable[0].goals).toBeGreaterThan(component.homeMadeTable[1].goals);
+    });
+  }));
+  it('Should sort ranking table with goals for exaequo last ',  async(() => {
+    fixture.detectChanges();
+    ConfigTestingData.key = 'goals';
+    component.ngOnInit();
+    fixture.whenStable().then(() => {
+      fixture.detectChanges();
+      component.tableLeagueClicked();
+      expect(component.homeMadeTable[2].points).toBe(component.homeMadeTable[3].points);
+      expect(component.homeMadeTable[2].goalDifference).toBe(component.homeMadeTable[3].goalDifference);
+      expect(component.homeMadeTable[3].goals).toBeLessThan(component.homeMadeTable[2].goals);
+    });
+  }));
+  it('Should not sort when all teams are exaequo ',  async(() => {
+    fixture.detectChanges();
+    ConfigTestingData.key = 'exaequo';
+    component.ngOnInit();
+    fixture.whenStable().then(() => {
+      fixture.detectChanges();
+      component.tableLeagueClicked();
+      expect(component.homeMadeTable[0].points).toBe(component.homeMadeTable[3].points);
+      expect(component.homeMadeTable[0].goalDifference).toBe(component.homeMadeTable[3].goalDifference);
+      expect(component.homeMadeTable[0].goals).toBe(component.homeMadeTable[3].goals);
+      expect(component.homeMadeTable[0].rank).toBe(1);
+      expect(component.homeMadeTable[3].rank).toBe(4);
+    });
+  }));
+
   it('Should build and switch to the table league view',  async(() => {
     fixture.detectChanges();
     component.ngOnInit();
@@ -144,6 +251,49 @@ describe('FootResultsComponent', () => {
       component.tableLeagueClicked();
       expect(component.homeMadeTable.length).toBe(4);
       expect(component.homeMadeTable[0].rank).toBe(1);
+    });
+  }));
+  it('Should close result UI',  async(() => {
+    fixture.detectChanges();
+    component.ngOnInit();
+    component.close();
+    fixture.whenStable().then(() => {
+      fixture.detectChanges();
+      expect(component.mode).toBe(MODES.RESULTS);
+      expect(component.tm).toBeDefined();
+      // expect(component.dspPopup.DebugElement.className).toBe('closeContainer');
+    });
+  }));
+  it('Should next button increment matchday',  async(() => {
+    fixture.detectChanges();
+    component.ngOnInit();
+    fixture.whenStable().then(() => {
+      initMd = component.matchday;
+      fixture.detectChanges();
+      component.nextD();
+      fixture.whenStable().then(() => {
+        expect(component.matchday).toBeGreaterThan(initMd);
+      });
+    });
+  }));
+  it('Should previous button decrement matchday',  async(() => {
+    fixture.detectChanges();
+    component.ngOnInit();
+    fixture.whenStable().then(() => {
+      initMd = component.matchday;
+      fixture.detectChanges();
+      component.lastD();
+      fixture.whenStable().then(() => {
+        expect(component.matchday).toBeLessThan(initMd);
+      });
+    });
+  }));
+  xit('Should click on open pitch compo',  async(() => {
+    fixture.detectChanges();
+    component.ngOnInit();
+    fixture.whenStable().then(() => {
+      fixture.detectChanges();
+      expect(component.out).toBe(false);
     });
   }));
   it('Should switch to the result view',  async(() => {

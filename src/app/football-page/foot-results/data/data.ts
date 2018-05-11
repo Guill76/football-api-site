@@ -87,6 +87,96 @@ export const serviceRes = JSON.stringify({
 
 export const serviceResNothing = JSON.stringify({});
 export const serviceResEmptyFixtures = JSON.stringify({ count: 0, fixtures: []});
+export const serviceResRankingGoalsDiff = JSON.stringify({
+    fixtures: [
+        {
+            id: 1,
+            competitionId: 448,
+            date: '2018-05-01T14:00:00Z',
+            status: 'FINISHED',
+            matchday: 1,
+            homeTeamName: 'Equipe 4',
+            homeTeamId: 4,
+            awayTeamName: 'Equipe 1',
+            awayTeamId: 1,
+            result: { goalsHomeTeam: 1, goalsAwayTeam: 3, halfTime: { goalsHomeTeam: 2, goalsAwayTeam: 0 } },
+            odds: null
+        },
+        {
+            id: 2,
+            competitionId: 448,
+            date: '2018-05-01T14:00:00Z',
+            status: 'FINISHED',
+            matchday: 1,
+            homeTeamName: 'Equipe 2',
+            homeTeamId: 2,
+            awayTeamName: 'Equipe 3',
+            awayTeamId: 3,
+            result: { goalsHomeTeam: 1, goalsAwayTeam: 2, halfTime: { goalsHomeTeam: 2, goalsAwayTeam: 0 } },
+            odds: null
+        }
+    ]
+});
+export const serviceResRankingGoalsMore = JSON.stringify({
+    fixtures: [
+        {
+            id: 1,
+            competitionId: 448,
+            date: '2018-05-01T14:00:00Z',
+            status: 'FINISHED',
+            matchday: 1,
+            homeTeamName: 'Equipe 4',
+            homeTeamId: 4,
+            awayTeamName: 'Equipe 1',
+            awayTeamId: 1,
+            result: { goalsHomeTeam: 3, goalsAwayTeam: 1, halfTime: { goalsHomeTeam: 2, goalsAwayTeam: 0 } },
+            odds: null
+        },
+        {
+            id: 2,
+            competitionId: 448,
+            date: '2018-05-01T14:00:00Z',
+            status: 'FINISHED',
+            matchday: 1,
+            homeTeamName: 'Equipe 3',
+            homeTeamId: 3,
+            awayTeamName: 'Equipe 2',
+            awayTeamId: 2,
+            result: { goalsHomeTeam: 0, goalsAwayTeam: 2, halfTime: { goalsHomeTeam: 2, goalsAwayTeam: 0 } },
+            odds: null
+        }
+    ]
+});
+export const serviceResRankingexaequo = JSON.stringify({
+    fixtures: [
+        {
+            id: 1,
+            competitionId: 448,
+            date: '2018-05-01T14:00:00Z',
+            status: 'FINISHED',
+            matchday: 1,
+            homeTeamName: 'Equipe 4',
+            homeTeamId: 4,
+            awayTeamName: 'Equipe 1',
+            awayTeamId: 1,
+            result: { goalsHomeTeam: 1, goalsAwayTeam: 1, halfTime: { goalsHomeTeam: 0, goalsAwayTeam: 0 } },
+            odds: null
+        },
+        {
+            id: 2,
+            competitionId: 448,
+            date: '2018-05-01T14:00:00Z',
+            status: 'FINISHED',
+            matchday: 1,
+            homeTeamName: 'Equipe 3',
+            homeTeamId: 3,
+            awayTeamName: 'Equipe 2',
+            awayTeamId: 2,
+            result: { goalsHomeTeam: 1, goalsAwayTeam: 1, halfTime: { goalsHomeTeam: 0, goalsAwayTeam: 0 } },
+            odds: null
+        }
+    ]
+});
 export const serviceResNoNextMatch = JSON.stringify({
     count: 6,
     fixtures: [

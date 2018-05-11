@@ -105,6 +105,16 @@ describe('FootResultsComponent', () => {
       expect(component.mode).toBe(MODES.LEAGUETABLE);
     });
   }));
+  it('Should check the recomputed ranking',  async(() => {
+    fixture.detectChanges();
+    component.ngOnInit();
+    fixture.whenStable().then(() => {
+      fixture.detectChanges();
+      component.tableLeagueClicked();
+      expect(component.homeMadeTable.length).toBe(4);
+      expect(component.homeMadeTable[0].rank).toBe(1);
+    });
+  }));
   it('Should switch to the result view',  async(() => {
     fixture.detectChanges();
     component.ngOnInit();

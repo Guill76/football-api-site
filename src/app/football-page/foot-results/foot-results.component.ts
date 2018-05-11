@@ -105,9 +105,11 @@ export class FootResultsComponent implements OnInit, OnDestroy {
         });
         this.nextMatchday = (tabNmd && tabNmd.length > 0) ? new Date(tabNmd[0].date) : null;
         const now = new Date();
-        if ( (this.nextMatchday.getTime() - now.getTime() < now.getTime() - this.lastMatchday.getTime() &&
-          this.matchday !== this.numOfFix) ) {
-        this.matchday++;
+        if (this.nextMatchday) {
+          if ( (this.nextMatchday.getTime() - now.getTime() < now.getTime() - this.lastMatchday.getTime() &&
+            this.matchday !== this.numOfFix) ) {
+          this.matchday++;
+          }
         }
         this.matchDaysArr = Array(this.numOfFix);
         this.matchDaysArr = this.matchDaysArr.fill().map((x, i) => i + 1);
@@ -173,8 +175,12 @@ export class FootResultsComponent implements OnInit, OnDestroy {
       this.tbLRes = null;
     }
     console.log('Destroying component: Unsubscribing Observables & clearing timers');
-    clearTimeout(this.tm);
-    this.subscription.unsubscribe();
+    if (this.tm) {
+      clearTimeout(this.tm);
+    }
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   }
   lastD() {
     let newVal = this.matchday;

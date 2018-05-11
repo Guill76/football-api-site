@@ -12,7 +12,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { FootDbApiService } from '../../foot-db-api.service';
 import { NotificationService } from '../../notification.service';
 
-import { serviceRes, MockFootDbApiService } from './foot-result-mock-service';
+import { ConfigTestingData, MockFootDbApiService } from './foot-result-mock-service';
 
 
 @Component(
@@ -25,7 +25,6 @@ describe('FootResultsComponent', () => {
   let serviceDb: FootDbApiService;
   // let serviceNotif: NotificationService;
   let fixture: ComponentFixture<FootResultsComponent>;
-
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -50,6 +49,7 @@ describe('FootResultsComponent', () => {
 
   beforeEach(() => {
     fixture = TestBed.createComponent(FootResultsComponent);
+    ConfigTestingData.key = 'nominal';
     // serviceDb = TestBed.get(FootDbApiService);
     // serviceNotif = fixture.componentRef.injector.get(NotificationService);
     component = fixture.componentInstance;
@@ -62,6 +62,7 @@ describe('FootResultsComponent', () => {
   });
   it('should have got some results after onInit',  async(() => {
       fixture.detectChanges();
+      // console.log(ConfigTestingData);
       component.ngOnInit();
       fixture.whenStable().then(() => {
         fixture.detectChanges();
@@ -94,6 +95,16 @@ describe('FootResultsComponent', () => {
       fixture.detectChanges();
       expect(component.nextMatchday.toLocaleDateString()).
         toBe(new Date('2018-05-20T14:00:00Z').toLocaleDateString());
+    });
+  }));
+  it('Should not compute nextMatchDay when no next match',  async(() => {
+    fixture.detectChanges();
+    ConfigTestingData.key = 'noNextMatch';
+    component.ngOnInit();
+    fixture.whenStable().then(() => {
+      fixture.detectChanges();
+      expect(component.nextMatchday).
+        toBeNull();
     });
   }));
   it('Should build and switch to the table league view',  async(() => {

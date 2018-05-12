@@ -8,6 +8,7 @@ import { NotificationService } from '../../notification.service';
 import { FootDbApiService } from '../../foot-db-api.service';
 import { isArray } from 'util';
 
+
 export const ALLSTATUS = {
   'FINISHED': 'Fini', 'TIMED': 'Plan.', 'SCHEDULED': 'A def.',
   'CANCELED': 'Ab.', 'IN_PLAY': 'En C.', 'POSTPONED': 'Rep.'
@@ -29,6 +30,8 @@ export class FootResultsComponent implements OnInit, OnDestroy {
   id: number;
 
   subscription = null;
+
+  errSub = false;
 
   lastTblLeagueId: number;
 
@@ -85,45 +88,56 @@ export class FootResultsComponent implements OnInit, OnDestroy {
       this.id = val.id;
       return this.api.getObsRequest('competitions/' + this.id + '/fixtures');
     }).map((data) => {
-      this.results = data.fixtures;
-      // console.log ( 'foot-result-component onInit');
-      return data.fixtures.filter((val: any) =>  (val.status === 'FINISHED' || val.status === 'IN_PLAY'));
+      if ( data && data.fixtures && isArray(data.fixtures) ) {
+        this.results = data.fixtures;
+        // console.log('Data OK: ', data);
+        return data.fixtures.filter((val: any) =>  (val.status === 'FINISHED' || val.status === 'IN_PLAY'));
+      } else {
+        this.results = [];
+        console.log('Data of null objects: ', data);
+        return ([]);
+      }
     })
     .subscribe(
       (result) => {
+        // console.log('res subscribe', result);
         const prevMode = this.mode;
         this.loaded = true;
         this.filterRes = result;
-        if (isArray(this.results)) {
-          this.notifSrv.notify('Les données de l\'API FootballData.org ont été chargées avec succès', 'SUCCESS', 2000);
-          if (this.results.length > 0) {
-            this.numOfFix = parseInt( this.results[this.results.length - 1].matchday, 10);
-            this.matchday = parseInt(this.filterRes[this.filterRes.length - 1].matchday, 10);
-            this.lastMatchday = new Date(this.filterRes[this.filterRes.length - 1].date);
-            const tabNmd = this.results.filter(val => {
-                return(val.matchday === this.matchday + 1) ;
-            });
-            this.nextMatchday = (tabNmd && tabNmd.length > 0) ? new Date(tabNmd[0].date) : null;
-            const now = new Date();
-            if (this.nextMatchday) {
-              if ( (this.nextMatchday.getTime() - now.getTime() < now.getTime() - this.lastMatchday.getTime() &&
-                this.matchday !== this.numOfFix) ) {
-              this.matchday++;
-              }
+        this.notifSrv.notify('Les données de l\'API FootballData.org ont été chargées avec succès', 'SUCCESS', 2000);
+        if (this.results.length > 0) {
+          this.numOfFix = parseInt( this.results[this.results.length - 1].matchday, 10);
+          this.matchday = parseInt(this.filterRes[this.filterRes.length - 1].matchday, 10);
+          this.lastMatchday = new Date(this.filterRes[this.filterRes.length - 1].date);
+          const tabNmd = this.results.filter(val => {
+              return(val.matchday === this.matchday + 1) ;
+          });
+          this.nextMatchday = (tabNmd && tabNmd.length > 0) ? new Date(tabNmd[0].date) : null;
+          const now = new Date();
+          if (this.nextMatchday) {
+            if ( (this.nextMatchday.getTime() - now.getTime() < now.getTime() - this.lastMatchday.getTime() &&
+              this.matchday !== this.numOfFix) ) {
+                this.matchday++;
             }
-            this.matchDaysArr = Array(this.numOfFix);
-            this.matchDaysArr = this.matchDaysArr.fill().map((x, i) => i + 1);
-            this.filterRes = this.results.filter(val =>  parseInt(val.matchday, 10) === this.matchday);
+          } else {
+            console.log('No next Match ');
           }
-          this.closed = false;
-          if (prevMode === MODES.LEAGUETABLE) {
-            this.tableLeagueClicked();
-          }
+          this.matchDaysArr = Array(this.numOfFix);
+          this.matchDaysArr = this.matchDaysArr.fill().map((x, i) => i + 1);
+          this.filterRes = this.results.filter(val =>  parseInt(val.matchday, 10) === this.matchday);
+        } else {
+          console.log('No datas found');
+        }
+        this.closed = false;
+        if (prevMode === MODES.LEAGUETABLE) {
+          this.tableLeagueClicked();
         }
       },
       (err) => {
         this.loaded = true;
         this.closed = true;
+        this.errSub = true;
+        console.log('erreur', err);
         this.notifSrv.notify('Problème lors du chragement des données de l\'api footballData.org', 'WARN', 2000);
         this.router.navigateByUrl('soccer-results');
         // location.reload(true);
@@ -192,12 +206,16 @@ export class FootResultsComponent implements OnInit, OnDestroy {
   }
   lastD() {
     let newVal = this.matchday;
-    newVal--;
+    if (this.matchday > 1) {
+      newVal--;
+    }
     this.onChangeMatchDay(newVal.toString());
   }
   nextD() {
     let newVal = this.matchday;
-    newVal++;
+    if (this.matchday < this.numOfFix) {
+      newVal++;
+    }
     this.onChangeMatchDay(newVal.toString());
   }
   resultsClicked() {
@@ -230,13 +248,13 @@ export class FootResultsComponent implements OnInit, OnDestroy {
     for (let i = 0; i < arObjTeams.length; i++) {
       w = 0, l = 0, n = 0, g = 0, ga = 0, pts = 0, d = 0, pl = 0;
       for (const obj of this.results.filter(
-        p => (p.status === 'FINISHED' && (p.awayTeamId === arObjTeams[i].teamId || p.homeTeamId === arObjTeams[i].teamId)))){
+        p => (p.status === 'FINISHED' && (p.awayTeamId === arObjTeams[i].teamId || p.homeTeamId === arObjTeams[i].teamId)))) {
         pl++;
         if (arObjTeams[i].teamId === obj.homeTeamId) {
           g = g + obj.result.goalsHomeTeam; ga = ga + obj.result.goalsAwayTeam;
           if ( obj.result.goalsHomeTeam > obj.result.goalsAwayTeam) {
             w++;
-          }else {
+          } else {
             if (obj.result.goalsHomeTeam === obj.result.goalsAwayTeam) {
               n++;
             } else {

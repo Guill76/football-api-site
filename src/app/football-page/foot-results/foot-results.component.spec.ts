@@ -1,5 +1,6 @@
 import { Component, DebugElement  } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { Router, ActivatedRoute } from '@angular/router';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 // import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -33,6 +34,7 @@ import { ConfigTestingData, MockFootDbApiService } from './foot-result-mock-serv
 describe('FootResultsComponent', () => {
   let component: FootResultsComponent;
   let serviceDb: FootDbApiService;
+  let router: Router;
   // let serviceNotif: NotificationService;
   let fixture: ComponentFixture<FootResultsComponent>;
   let initMd: number;
@@ -77,6 +79,7 @@ describe('FootResultsComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(FootResultsComponent);
     ConfigTestingData.key = 'nominal';
+    router = TestBed.get(Router);
     // serviceDb = TestBed.get(FootDbApiService);
     // serviceNotif = fixture.componentRef.injector.get(NotificationService);
     component = fixture.componentInstance;
@@ -84,7 +87,7 @@ describe('FootResultsComponent', () => {
     // spyOn( serviceDb, 'getObsRequest').and.returnValue(Observable.of(res));
   });
 
-  it('#should be created', () => {
+  it('should be created', () => {
     expect(component).toBeTruthy();
   });
   it('should have got some results after onInit',  async(() => {
@@ -92,9 +95,8 @@ describe('FootResultsComponent', () => {
       // console.log(ConfigTestingData);
       component.ngOnInit();
       fixture.whenStable().then(() => {
-        fixture.detectChanges();
         expect(component.results).toBeDefined();
-        expect(component.results.length).toBe(6);
+        expect(component.results.length).toBe(8);
         expect(component.filterRes.length).toBe(2);
       });
   }));
@@ -102,16 +104,14 @@ describe('FootResultsComponent', () => {
     fixture.detectChanges();
     component.ngOnInit();
     fixture.whenStable().then(() => {
-      fixture.detectChanges();
       expect(component.matchday).toBe(3);
-      expect(component.numOfFix).toBe(3);
+      expect(component.numOfFix).toBe(4);
     });
   }));
   it('Should check the default mode to be result view',  async(() => {
     fixture.detectChanges();
     component.ngOnInit();
     fixture.whenStable().then(() => {
-      fixture.detectChanges();
       expect(component.mode).toBe(MODES.RESULTS);
     });
   }));
@@ -120,9 +120,8 @@ describe('FootResultsComponent', () => {
     fixture.detectChanges();
     component.ngOnInit();
     fixture.whenStable().then(() => {
-      fixture.detectChanges();
       expect(component.nextMatchday.toLocaleDateString()).
-        toBe(new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1,
+        toBe(new Date(now.getFullYear(), now.getMonth(), now.getDate() + 10,
         now.getHours(), now.getMinutes(), now.getSeconds()).toLocaleDateString());
     });
   }));
@@ -131,9 +130,16 @@ describe('FootResultsComponent', () => {
     ConfigTestingData.key = 'noNextMatch';
     component.ngOnInit();
     fixture.whenStable().then(() => {
-      fixture.detectChanges();
       expect(component.nextMatchday).
         toBeNull();
+    });
+  }));
+  it ('should compute the bigger table for ranking', async(() => {
+    component.ngOnInit();
+    fixture.whenStable().then(() => {
+      component.tableLeagueClicked();
+      expect(component.homeMadeTable[3].points).toBe(component.homeMadeTable[2].points);
+      expect(component.homeMadeTable[3].goalDifference).toBeLessThanOrEqual(component.homeMadeTable[2].goalDifference);
     });
   }));
   it('Should reset the previous mode to tableleague button if mode is allready tableleague',  async(() => {
@@ -142,7 +148,6 @@ describe('FootResultsComponent', () => {
     component.ngOnInit();
 
     fixture.whenStable().then(() => {
-      fixture.detectChanges();
       expect(component.mode).toBe(MODES.LEAGUETABLE);
     });
   }));
@@ -151,7 +156,6 @@ describe('FootResultsComponent', () => {
     component.ngOnInit();
     component.onChangeMatchDay(1);
     fixture.whenStable().then(() => {
-      fixture.detectChanges();
       expect(component.matchday).toBe(1);
     });
   }));
@@ -160,17 +164,32 @@ describe('FootResultsComponent', () => {
     ConfigTestingData.key = 'nothing';
     component.ngOnInit();
     fixture.whenStable().then(() => {
-      fixture.detectChanges();
-      expect(component.results).toBeUndefined();
+      expect(component.results.length).toBe(0);
     });
   }));
-  it('Should check if table of empty fixtures is return',  async(() => {
+  it('Should check if array of empty fixtures is return',  async(() => {
     fixture.detectChanges();
     ConfigTestingData.key = 'emptyFixtures';
     component.ngOnInit();
     fixture.whenStable().then(() => {
-      fixture.detectChanges();
       expect(component.results.length).toBe(0);
+    });
+  }));
+
+  it('Should check if no array of fixtures is returned',  async(() => {
+    fixture.detectChanges();
+    ConfigTestingData.key = 'noArrayResult';
+    component.ngOnInit();
+    fixture.whenStable().then(() => {
+      expect(component.results.length).toBe(0);
+    });
+  }));
+  it('Should take subscrition error block when error is catch',  async(() => {
+    fixture.detectChanges();
+    ConfigTestingData.key = 'error';
+    component.ngOnInit();
+    fixture.whenStable().then(() => {
+      expect(component.errSub).toBe(true);
     });
   }));
   it('Should sort ranking table with goals diff for exaequo first',  async(() => {
@@ -178,7 +197,7 @@ describe('FootResultsComponent', () => {
     ConfigTestingData.key = 'goalDiff';
     component.ngOnInit();
     fixture.whenStable().then(() => {
-      fixture.detectChanges();
+
       component.tableLeagueClicked();
       expect(component.homeMadeTable[0].points).toBe(component.homeMadeTable[1].points);
       expect(component.homeMadeTable[0].goalDifference).toBeGreaterThan(component.homeMadeTable[1].goalDifference);
@@ -189,7 +208,6 @@ describe('FootResultsComponent', () => {
     ConfigTestingData.key = 'goalDiff';
     component.ngOnInit();
     fixture.whenStable().then(() => {
-      fixture.detectChanges();
       component.tableLeagueClicked();
       expect(component.homeMadeTable[2].points).toBe(component.homeMadeTable[3].points);
       expect(component.homeMadeTable[2].goalDifference).toBeGreaterThan(component.homeMadeTable[3].goalDifference);
@@ -200,7 +218,6 @@ describe('FootResultsComponent', () => {
     ConfigTestingData.key = 'goals';
     component.ngOnInit();
     fixture.whenStable().then(() => {
-      fixture.detectChanges();
       component.tableLeagueClicked();
       expect(component.homeMadeTable[0].points).toBe(component.homeMadeTable[1].points);
       expect(component.homeMadeTable[0].goalDifference).toBe(component.homeMadeTable[1].goalDifference);
@@ -212,7 +229,6 @@ describe('FootResultsComponent', () => {
     ConfigTestingData.key = 'goals';
     component.ngOnInit();
     fixture.whenStable().then(() => {
-      fixture.detectChanges();
       component.tableLeagueClicked();
       expect(component.homeMadeTable[2].points).toBe(component.homeMadeTable[3].points);
       expect(component.homeMadeTable[2].goalDifference).toBe(component.homeMadeTable[3].goalDifference);
@@ -224,7 +240,6 @@ describe('FootResultsComponent', () => {
     ConfigTestingData.key = 'exaequo';
     component.ngOnInit();
     fixture.whenStable().then(() => {
-      fixture.detectChanges();
       component.tableLeagueClicked();
       expect(component.homeMadeTable[0].points).toBe(component.homeMadeTable[3].points);
       expect(component.homeMadeTable[0].goalDifference).toBe(component.homeMadeTable[3].goalDifference);
@@ -233,12 +248,10 @@ describe('FootResultsComponent', () => {
       expect(component.homeMadeTable[3].rank).toBe(4);
     });
   }));
-
   it('Should build and switch to the table league view',  async(() => {
     fixture.detectChanges();
     component.ngOnInit();
     fixture.whenStable().then(() => {
-      fixture.detectChanges();
       component.tableLeagueClicked();
       expect(component.mode).toBe(MODES.LEAGUETABLE);
     });
@@ -247,7 +260,6 @@ describe('FootResultsComponent', () => {
     fixture.detectChanges();
     component.ngOnInit();
     fixture.whenStable().then(() => {
-      fixture.detectChanges();
       component.tableLeagueClicked();
       expect(component.homeMadeTable.length).toBe(4);
       expect(component.homeMadeTable[0].rank).toBe(1);
@@ -258,7 +270,6 @@ describe('FootResultsComponent', () => {
     component.ngOnInit();
     component.close();
     fixture.whenStable().then(() => {
-      fixture.detectChanges();
       expect(component.mode).toBe(MODES.RESULTS);
       expect(component.tm).toBeDefined();
       // expect(component.dspPopup.DebugElement.className).toBe('closeContainer');
@@ -266,10 +277,10 @@ describe('FootResultsComponent', () => {
   }));
   it('Should next button increment matchday',  async(() => {
     fixture.detectChanges();
+    ConfigTestingData.key = 'checkNextAndPrev';
     component.ngOnInit();
     fixture.whenStable().then(() => {
       initMd = component.matchday;
-      fixture.detectChanges();
       component.nextD();
       fixture.whenStable().then(() => {
         expect(component.matchday).toBeGreaterThan(initMd);
@@ -278,29 +289,57 @@ describe('FootResultsComponent', () => {
   }));
   it('Should previous button decrement matchday',  async(() => {
     fixture.detectChanges();
+    ConfigTestingData.key = 'checkNextAndPrev';
     component.ngOnInit();
     fixture.whenStable().then(() => {
       initMd = component.matchday;
-      fixture.detectChanges();
       component.lastD();
       fixture.whenStable().then(() => {
         expect(component.matchday).toBeLessThan(initMd);
       });
     });
   }));
-  xit('Should click on open pitch compo',  async(() => {
+  it('Should next button not increment matchday if last matchDay',  async(() => {
+    fixture.detectChanges();
+    ConfigTestingData.key = 'oneDayCompet';
+    component.ngOnInit();
+    fixture.whenStable().then(() => {
+      initMd = component.matchday;
+      component.nextD();
+      fixture.whenStable().then(() => {
+        expect(component.matchday).toBe(initMd);
+      });
+    });
+  }));
+  it('Should previous button not decrement matchday if first matchDay',  async(() => {
+    fixture.detectChanges();
+    ConfigTestingData.key = 'oneDayCompet';
+    component.ngOnInit();
+    fixture.whenStable().then(() => {
+      initMd = component.matchday;
+      component.lastD();
+      fixture.whenStable().then(() => {
+        expect(component.matchday).toBe(initMd);
+      });
+    });
+  }));
+  it('Should click on open pitch compo',  async(() => {
     fixture.detectChanges();
     component.ngOnInit();
     fixture.whenStable().then(() => {
-      fixture.detectChanges();
-      expect(component.out).toBe(false);
+      spyOn(router, 'navigate').and.callFake( (a) => {
+        console.log('router navigate open pitch compo', a);
+      });
+      component.openPitchCompo(1);
+      fixture.whenStable().then(() => {
+        expect(component.out).toBe(true);
+      });
     });
   }));
   it('Should switch to the result view',  async(() => {
     fixture.detectChanges();
     component.ngOnInit();
     fixture.whenStable().then(() => {
-      fixture.detectChanges();
       component.resultsClicked();
       expect(component.mode).toBe(MODES.RESULTS);
     });

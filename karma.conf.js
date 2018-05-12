@@ -55,6 +55,7 @@ module.exports = function (config) {
     reporters: ['progress', 'kjhtml', 'coverage-istanbul'],
     port: 9876,
     colors: true,
+    crossOriginAttribute: false,
     logLevel: config.LOG_INFO,
     autoWatch: true,
     browsers: ['Chrome'],

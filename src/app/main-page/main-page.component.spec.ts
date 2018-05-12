@@ -40,10 +40,8 @@ describe('MainPageComponent', () => {
     component = fixture.componentInstance;
   });
 
-  it('should be created', async(() => {
+  it('should be created', () => {
     fixture.detectChanges();
-    setTimeout(() => {
-      expect(component).toBeDefined();
-    }, 100);
-  }));
+    expect(component).toBeDefined();
+  });
 });

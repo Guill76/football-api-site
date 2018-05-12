@@ -134,12 +134,15 @@ describe('FootResultsComponent', () => {
         toBeNull();
     });
   }));
-  it ('should compute the bigger table for ranking', async(() => {
+  it (`should compute ranking and should sort the big table of fixtures with only null
+  results to take goals 'for' into account`, async(() => {
+    fixture.detectChanges();
+    ConfigTestingData.key = 'bigDataOnlyNullResults';
     component.ngOnInit();
     fixture.whenStable().then(() => {
       component.tableLeagueClicked();
-      expect(component.homeMadeTable[3].points).toBe(component.homeMadeTable[2].points);
-      expect(component.homeMadeTable[3].goalDifference).toBeLessThanOrEqual(component.homeMadeTable[2].goalDifference);
+      expect(component.homeMadeTable.length).toBe(20);
+      // expect(component.homeMadeTable[3].goalDifference).toBeLessThanOrEqual(component.homeMadeTable[2].goalDifference);
     });
   }));
   it('Should reset the previous mode to tableleague button if mode is allready tableleague',  async(() => {
@@ -272,7 +275,6 @@ describe('FootResultsComponent', () => {
     fixture.whenStable().then(() => {
       expect(component.mode).toBe(MODES.RESULTS);
       expect(component.tm).toBeDefined();
-      // expect(component.dspPopup.DebugElement.className).toBe('closeContainer');
     });
   }));
   it('Should next button increment matchday',  async(() => {
@@ -342,6 +344,13 @@ describe('FootResultsComponent', () => {
     fixture.whenStable().then(() => {
       component.resultsClicked();
       expect(component.mode).toBe(MODES.RESULTS);
+    });
+  }));
+  it('Should getStatus null if status is unknown',  async(() => {
+    fixture.detectChanges();
+    component.ngOnInit();
+    fixture.whenStable().then(() => {
+      expect(component.getStatus('NAWAK')).toBeNull();
     });
   }));
 

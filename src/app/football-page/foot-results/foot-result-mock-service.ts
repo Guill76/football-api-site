@@ -3,7 +3,7 @@ import { serviceRes, serviceResNoNextMatch, serviceResNothing,
     serviceResEmptyFixtures, serviceResRankingGoalsDiff,
     serviceResRankingGoalsMore, serviceResRankingexaequo,
     serviceResNoArray, serviceResCheckNextAndPrevBut,
-    serviceResError, serviceResOneDayCompetition } from './data/data';
+    serviceResError, serviceResOneDayCompetition, serviceResBigData } from './data/data';
 export class ConfigTestingData {
     private static _key = 'nominal';
     static set key(key: string) {
@@ -24,6 +24,7 @@ export class ConfigTestingData {
     private static noArrayResult = serviceResNoArray;
     private static checkNextAndPrev = serviceResCheckNextAndPrevBut;
     private static oneDayCompet = serviceResOneDayCompetition;
+    private static bigDataOnlyNullResults = serviceResBigData;
     private static error = serviceResError;
 }
 
@@ -38,6 +39,6 @@ export class MockFootDbApiService {
     config: ConfigTestingData;
     getObsRequest(url: string): Observable<any> {
       // console.log('Mockservice', res);
-      return Observable.of(ConfigTestingData[ConfigTestingData['key']]).map( resp => JSON.parse(resp) );
+      return Observable.of(ConfigTestingData[ConfigTestingData['key']]).map( resp => JSON.parse(resp));
     }
   }

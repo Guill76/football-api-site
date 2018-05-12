@@ -134,7 +134,7 @@ describe('FootResultsComponent', () => {
         toBeNull();
     });
   }));
-  it (`should compute ranking and should sort the big table of fixtures with only null
+  it (`should compute ranking and should sort the table of fixtures with only null
   results to take goals 'for' into account`, async(() => {
     fixture.detectChanges();
     ConfigTestingData.key = 'bigDataOnlyNullResults';
@@ -346,7 +346,7 @@ describe('FootResultsComponent', () => {
       expect(component.mode).toBe(MODES.RESULTS);
     });
   }));
-  it('Should getStatus null if status is unknown',  async(() => {
+  it('Should getStatus is null if status is unknown',  async(() => {
     fixture.detectChanges();
     component.ngOnInit();
     fixture.whenStable().then(() => {

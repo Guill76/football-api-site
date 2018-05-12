@@ -7,7 +7,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { throwError as observableThrowError,  Observable } from 'rxjs';
 
 import { FootResultsComponent, MODES } from './foot-results.component';
-import { browser } from 'protractor';
+
 import { HttpModule } from '@angular/http';
 import { RouterTestingModule } from '@angular/router/testing';
 import { FootDbApiService } from '../../foot-db-api.service';
@@ -84,7 +84,6 @@ describe('FootResultsComponent', () => {
     // serviceNotif = fixture.componentRef.injector.get(NotificationService);
     component = fixture.componentInstance;
     serviceDb = TestBed.get(FootDbApiService);
-    // spyOn( serviceDb, 'getObsRequest').and.returnValue(Observable.of(res));
   });
 
   it('should be created', () => {
@@ -200,7 +199,6 @@ describe('FootResultsComponent', () => {
     ConfigTestingData.key = 'goalDiff';
     component.ngOnInit();
     fixture.whenStable().then(() => {
-
       component.tableLeagueClicked();
       expect(component.homeMadeTable[0].points).toBe(component.homeMadeTable[1].points);
       expect(component.homeMadeTable[0].goalDifference).toBeGreaterThan(component.homeMadeTable[1].goalDifference);

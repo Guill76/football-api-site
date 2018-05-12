@@ -56,7 +56,7 @@ export class FootDbApiService {
       this.notifServ.notify('Les données de l\'API Foot Data ont été chargées avec succès', 'SUCCESS', 3000);
       this.loaded = true;
     });
-    }catch (err) {
+    } catch (err) {
       this.notifServ.notify(err.message, 'SUCCESS', 3000);
     }
   }

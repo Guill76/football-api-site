@@ -13,9 +13,9 @@ import { WebsocketService } from '../../websocket.service';
 describe('SoccerPitchComponent', () => {
   let component: SoccerPitchComponent;
   let fixture: ComponentFixture<SoccerPitchComponent>;
-  let serviceDb: FootDbApiService;
-  let serviceNotif: NotificationService;
-  let serviceUsers: UsersService;
+  // let serviceDb: FootDbApiService;
+  // let serviceNotif: NotificationService;
+  // let serviceUsers: UsersService;
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports:      [ BrowserModule, HttpModule, RouterTestingModule, FormsModule, ReactiveFormsModule],

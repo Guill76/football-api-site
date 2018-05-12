@@ -28,9 +28,9 @@ describe('SoccerPitchComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(SoccerPitchComponent);
     component = fixture.componentInstance;
-    serviceDb = fixture.componentRef.injector.get(FootDbApiService);
-    serviceNotif = fixture.componentRef.injector.get(NotificationService);
-    serviceUsers = fixture.componentRef.injector.get(UsersService);
+    // serviceDb = fixture.componentRef.injector.get(FootDbApiService);
+    // serviceNotif = fixture.componentRef.injector.get(NotificationService);
+    // serviceUsers = fixture.componentRef.injector.get(UsersService);
     fixture.detectChanges();
   });
 

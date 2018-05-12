@@ -14,7 +14,7 @@ module.exports = function (config) {
     ],
     client:{
       clearContext: false, // leave Jasmine Spec Runner output visible in browser
-      captureConsole: true
+      captureConsole: false
     },
     coverageIstanbulReporter: {
       dir: require('path').join(__dirname, 'coverage'), reports: [ 'html', 'lcovonly', 'text-summary' ],
@@ -31,16 +31,16 @@ module.exports = function (config) {
       thresholds: {
         emitWarning: false, // set to `true` to not fail the test command when thresholds are not met
         global: { // thresholds for all files
-          statements: 100,
-          lines: 100,
-          branches: 100,
-          functions: 100
+          statements: 90,
+          lines: 90,
+          branches: 90,
+          functions: 90
         },
         each: { // thresholds per file
-          statements: 100,
-          lines: 100,
-          branches: 100,
-          functions: 100,
+          statements: 90,
+          lines: 90,
+          branches: 90,
+          functions: 90,
           // overrides: {
           //   'baz/component/**/*.js': {
           //     statements: 100

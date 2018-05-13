@@ -7,6 +7,7 @@ import { serviceRes, serviceResNoNextMatch, serviceResNothing,
 export class ConfigTestingData {
     private static _key = 'nominal';
     static set key(key: string) {
+        /* istanbul ignore else */
         if (this.hasOwnProperty(key) && key !== '_key' ) {
             ConfigTestingData._key = key;
         }

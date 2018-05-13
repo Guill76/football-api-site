@@ -45,7 +45,7 @@ describe('LoginComponent', () => {
   it('should be created', () => {
     expect(component).toBeTruthy();
   });
-  it ('Should can connect in onInit', async(() => {
+  it ('Should connect in onInit', async(() => {
     fixture.detectChanges();
     component.ngOnInit();
     fixture.whenStable().then( () => {
@@ -68,7 +68,7 @@ describe('LoginComponent', () => {
     });
   }));
 
-  it ('Should cannot connect in onInit with unauthorized user', async(() => {
+  it ('Should not connect in onInit with unauthorized user', async(() => {
     fixture.detectChanges();
     component.ngOnInit();
     fixture.whenStable().then( () => {
@@ -107,7 +107,7 @@ describe('LoginComponent', () => {
     });
   }));
 
-  it ('Should not can connect if error', async(() => {
+  it ('Should not connect if error', async(() => {
     fixture.detectChanges();
     spyOn(userService, 'isConnected').and.callFake( () => {
       isConnected = true;
@@ -123,7 +123,7 @@ describe('LoginComponent', () => {
     });
   }));
 
-  it ('Should cannot connect if connect is direct', async(() => {
+  it ('Should connect if connect is direct', async(() => {
     fixture.detectChanges();
     component.connect();
     fixture.whenStable().then( () => {

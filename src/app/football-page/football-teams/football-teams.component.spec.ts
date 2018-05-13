@@ -7,10 +7,12 @@ import { NotificationService } from '../../notification.service';
 import { FootballTeamsComponent } from './football-teams.component';
 
 
+
 describe('FootballTeamsComponent', () => {
   let component: FootballTeamsComponent;
   let fixture: ComponentFixture<FootballTeamsComponent>;
   let service: FootDbApiService;
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [HttpModule, RouterTestingModule],
@@ -21,6 +23,7 @@ describe('FootballTeamsComponent', () => {
   }));
 
   beforeEach(() => {
+
     fixture = TestBed.createComponent(FootballTeamsComponent);
     service = fixture.componentRef.injector.get(FootDbApiService);
     component = fixture.componentInstance;

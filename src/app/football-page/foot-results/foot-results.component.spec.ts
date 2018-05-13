@@ -14,7 +14,7 @@ import { FootDbApiService } from '../../foot-db-api.service';
 import { NotificationService } from '../../notification.service';
 
 import { ConfigTestingData, MockFootDbApiService } from './foot-result-mock-service';
-import { NUMBER_FORMAT_REGEXP } from '@angular/common/src/i18n/format_number';
+// import { NUMBER_FORMAT_REGEXP } from '@angular/common/src/i18n/format_number';
 
 
 @Component(

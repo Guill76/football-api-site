@@ -45,7 +45,7 @@ describe('LoginComponent', () => {
   it('should be created', () => {
     expect(component).toBeTruthy();
   });
-  it ('Should connect in onInit', async(() => {
+  it ('can connect in onInit with existing user/pwd in db', async(() => {
     fixture.detectChanges();
     component.ngOnInit();
     fixture.whenStable().then( () => {
